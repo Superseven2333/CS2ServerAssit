@@ -192,7 +192,7 @@ class Api:
                     os.chdir(RunLocal)
                 if str(gametype) == '回防':
                     os.chdir(file_content)
-                    command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                    command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +sv_skirmish_id 12 +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
                     os.system(command)
                     os.getcwd()
                     os.chdir(RunLocal)
@@ -223,7 +223,7 @@ class Api:
                     os.chdir(RunLocal)
                 if str(gametype) == '回防':
                     os.chdir(file_content)
-                    command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                    command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +sv_skirmish_id 12 +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
                     os.system(command)
                     os.getcwd()
                     os.chdir(RunLocal)
@@ -262,7 +262,7 @@ class Api:
                                 os.chdir(RunLocal)
                             if str(gametype) == '回防':
                                 os.chdir(file_content)
-                                command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                                command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +sv_skirmish_id 12 +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
                                 os.system(command)
                                 os.getcwd()
                                 os.chdir(RunLocal)
@@ -293,7 +293,7 @@ class Api:
                                 os.chdir(RunLocal)
                             if str(gametype) == '回防':
                                 os.chdir(file_content)
-                                command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                                command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +sv_skirmish_id 12 +map {map} -high -port {port} -ip {ip} -console +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
                                 os.system(command)
                                 os.getcwd()
                                 os.chdir(RunLocal)
