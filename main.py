@@ -6,6 +6,9 @@ import psutil
 import webview
 import win32api
 import win32con
+import subprocess
+
+import shutil
 
 local = os.getcwd()
 
@@ -34,14 +37,39 @@ def map_list():
     os.chdir("../")
     os.chdir("../")
     os.chdir("./csgo/maps")
-
+    maps_folder=os.getcwd()
     for file_path in glob.glob(os.path.join('.', "*.vpk")):
         file_name = os.path.basename(file_path)
         file_list.append(file_name)
         os.chdir(local)
+    # with open('./data/maplist.txt','w',encoding='UTF-8') as file:
+    #     for i in file_list:
+    #         file.write(i+'|')
+    os.chdir(file_content)
+    os.chdir("../")
+    os.chdir("../")
+    os.chdir("../")
+    os.chdir("../")
+    os.chdir("../")
+    os.chdir("./workshop/content/730")
+
+    def find_vpk_files(folder_path):
+        vpk_files = []
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                if file.endswith(".vpk"):
+                    vpk_files.append(os.path.join(root, file))
+        return vpk_files
+
+    folder_path = "./"
+    vpk_files = find_vpk_files(folder_path)
+    for i in vpk_files:
+        file_path = i
+        shutil.copy(file_path, maps_folder)
+    os.chdir(local)
     with open('./data/maplist.txt','w',encoding='UTF-8') as file:
-        for i in file_list:
-            file.write(i+'|')
+         for a in file_list:
+             file.write(a+'|')
 
 
 
@@ -152,6 +180,8 @@ class Api:
                     if proc.info['name'] == target_process:
                         proc.kill()
 
+    def vac_fix(self):
+        os.system('net start "steam client service"')
 
     def startpy(self,ip,port,maxplayers):
 
@@ -298,7 +328,16 @@ class Api:
                                 os.getcwd()
                                 os.chdir(RunLocal)
 
+    def steamcmd(self):
+        # 构建SteamCMD命令
+        command = subprocess.Popen(['./steamcmd.exe'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True)
 
+        # 执行SteamCMD命令
+        subprocess.run(command, capture_output=True, text=True,encoding="UTF-8")
+        command.stdin.write('login anonymous\n')
+        command.stdin.flush()
+        output = command.stdout.readline()
+        print(output.strip())  # 输出控制台输出
 
 
 

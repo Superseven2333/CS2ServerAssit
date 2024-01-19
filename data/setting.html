@@ -9,6 +9,7 @@
 <body class="background_dark">
 <button id="cfg" onclick="window.pywebview.api.ChangeCfg()">编辑cfg</button>
 <button id="check" onclick="window.pywebview.api.check_file()">环境检测</button>
+<button id="vac_fix" onclick="window.pywebview.api.vac_fix()">VAC修复</button>
 </body>
 <div class="menu">
     <a href="index.html" style="color: inherit">
@@ -88,6 +89,20 @@
     #check{
         position: fixed;
         top: 55px;
+        left: 70px;
+
+        width: 80px;
+        height: 30px;
+        border-width: 0px;
+        border-radius: 3px;
+        background: #1E90FF;
+        cursor: pointer;
+        outline: none;
+        color: white;
+    }
+    #vac_fix{
+        position: fixed;
+        top: 95px;
         left: 70px;
 
         width: 80px;
