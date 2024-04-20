@@ -28,11 +28,21 @@
         <option>搭档</option>
         <option>军备</option>
     </select>
-    <h5 style="position: fixed;top: 108px;left: 70px;color: white">VAC</h5>
+
+    <h6 class="rcname_text">服务器名称</h6>
+    <input id="rcname" value="" placeholder="  不可中文 可空">
+
+    <h5 style="position: fixed;top: 131px;left: 70px;color: white">VAC</h5>
     <label class="switch">
         <input checked id="vac" type="checkbox" value="">
         <div class="slider round"></div>
     </label>
+    <h6 style="position: fixed;top: 129px;left: 170px;color: white">创意工坊</h6>
+    <label class="custom-switch">
+        <input type="checkbox" id="wksp">
+        <span class="custom-slider"></span>
+    </label>
+
     <!--    onclick="window.pywebview.api.start()"-->
     <button class="submit" onclick="start()" style="height: 30px;position: fixed;top: 160px;left: 110px" type="button">
         启动
@@ -71,6 +81,61 @@
     <img src="">
 </div>
 <style>
+
+    .custom-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 20px;
+      left: 160px;
+      top:142px;
+    }
+
+    .custom-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .custom-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .custom-slider:before {
+      position: absolute;
+      content: "";
+      height: 12px;
+      width: 12px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    .custom-switch input:checked + .custom-slider {
+      background-color: #2196F3;
+    }
+
+    .custom-switch input:focus + .custom-slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    .custom-switch input:checked + .custom-slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
     .background_dark {
         background-color: rgb(43, 43, 43);
     }
@@ -183,6 +248,20 @@
         top: 83px;
         color: white;
     }
+    .rcname_text{
+        position: fixed;
+        left: 65px;
+        top: 103px;
+        color: white;
+    }
+    #rcname{
+        position: fixed;
+        left: 125px;
+        top: 126px;
+        width: 100px;
+        background-color: beige;
+        border-radius: 15px;
+    }
 
     #mode {
         position: fixed;
@@ -193,13 +272,14 @@
         border-radius: 15px;
     }
 
+
     .switch {
         position: relative;
         display: inline-block;
         width: 50px;
         height: 20px;
         left: 100px;
-        top: 120px;
+        top: 145px;
     }
 
     .switch input {
@@ -224,7 +304,7 @@
         height: 15px;
         width: 15px;
         left: 112px;
-        top: 130px;
+        top: 155px;
         background-color: white;
         -webkit-transition: .4s;
         transition: .4s;
@@ -245,7 +325,7 @@
         transform: translateX(26px);
     }
 
-    /* Rounded sliders */
+
     .slider.round {
         border-radius: 30px;
     }
@@ -265,6 +345,8 @@
         cursor: pointer;
     }
 
+
+
     .submit[type="submit"]:hover {
         background-color: #45a049;
     }
@@ -282,13 +364,14 @@
         cursor: pointer;
         border-radius: 4px;
         position: absolute;
+        margin-top:18px;
         top: 6px;
         left: 720px;
     }
 
     #lastchange {
         position: fixed;
-        top: 200px;
+        top: 212px;
         left: 111px;
         font-size: 10px;
         width: 73px;
@@ -302,8 +385,9 @@
     }
 
 
-</style>
 
+
+</style>
 
 
 <script>
@@ -349,18 +433,23 @@
 
     });
 
-
     document.addEventListener('DOMContentLoaded', function () {
         var checkbox = document.getElementById('vac');
+        var checkbox2 = document.getElementById('wksp');
 
-        function handleCheckboxChange() {
-            tf = checkbox.checked;
+        function handleCheckboxChange(event) {
+            var targetCheckbox = event.target;
+            var isChecked = targetCheckbox.checked;
 
-            window.pywebview.api.vactf(tf);
-
+            if (targetCheckbox.id === 'vac') {
+                window.pywebview.api.vactf(isChecked);
+            } else if (targetCheckbox.id === 'wksp') {
+                window.pywebview.api.wksptf(isChecked);
+            }
         }
 
         checkbox.addEventListener('change', handleCheckboxChange);
+        checkbox2.addEventListener('change', handleCheckboxChange);
     });
     var selectele=document.getElementById("map_drop");
     selectele.addEventListener('change', function() {
@@ -381,7 +470,8 @@
         port = document.getElementById('port_input').value
         ip = document.getElementById('ip_input').value
         maxplayers = document.getElementById('players_input').value
-        window.pywebview.api.startpy(ip, port, maxplayers);
+        rcname = document.getElementById('rcname').value
+        window.pywebview.api.startpy(ip, port, maxplayers,rcname);
 
     }
 
@@ -419,6 +509,8 @@
 
             xhr.send();
         }
+
+
 
 
 

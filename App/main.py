@@ -2,9 +2,12 @@ import glob
 import os
 import shutil
 import time
+import zipfile
+
 import psutil
 import webview
 import win32api
+import win32ui
 import win32con
 import requests
 
@@ -40,9 +43,6 @@ def map_list():
         file_name = os.path.basename(file_path)
         file_list.append(file_name)
         os.chdir(local)
-    # with open('./data/maplist.txt','w',encoding='UTF-8') as file:
-    #     for i in file_list:
-    #         file.write(i+'|')
     os.chdir(file_content)
     os.chdir("../../")
     os.chdir("../../")
@@ -100,12 +100,11 @@ if game_text == '':
     else:
         pass
 
-vac = 'True'
-
 
 class Api:
     def __init__(self):
         self.vac = True
+        self.wksp = False
         self.map = ''
         self.gametype = ''
 
@@ -135,24 +134,218 @@ class Api:
         self.gametype = select_name
 
     def vactf(self, truefalse):
-        global vac
         self.vac = truefalse
 
+    def wksptf(self, truefalse):
+        self.wksp = truefalse
+
+    def startpy(self, ip, port, maxplayers, rcname):
+        target_process = 'cs2.exe'
+        vac = str(self.vac)
+        wksp = str(self.wksp)
+        map = self.map
+        gametype = self.gametype
+
+        with open('data/type.txt', 'w', encoding='UTF-8') as file:
+            file.write(str(port) + "|" + str(ip) + "|" + str(maxplayers) + "|" + map + "|" + vac + "|" + gametype)
+
+        RunLocal = os.getcwd()
+
+        if not Api.is_process_running(target_process):
+            if wksp == "True":
+                if vac == "True":
+                    with open("data/data.txt", "r", encoding='UTF-8') as file:
+                        file_content = file.read()
+
+                    os.chdir(file_content)
+                    command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map de_mirage -high -port {port} -ip {ip} -console +host_workshop_map {map} +hostname {rcname}"
+                    if str(gametype) == '休闲':
+                        command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                    elif str(gametype) == '竞技':
+                        command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                    elif str(gametype) == '死斗':
+                        command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '回防':
+                        command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                    elif str(gametype) == '搭档':
+                        command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '军备':
+                        command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                    os.system(command)
+                    os.chdir(RunLocal)
+                else:
+                    with open("data/data.txt", "r", encoding='UTF-8') as file:
+                        file_content = file.read()
+
+                    os.chdir(file_content)
+                    command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map de_mirage -high -port {port} -ip {ip} -console +host_workshop_map {map} -insecure +hostname {rcname}"
+                    if str(gametype) == '休闲':
+                        command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                    elif str(gametype) == '竞技':
+                        command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                    elif str(gametype) == '死斗':
+                        command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '回防':
+                        command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                    elif str(gametype) == '搭档':
+                        command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '军备':
+                        command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                    os.system(command)
+                    os.chdir(RunLocal)
+            else:
+                if vac == "True":
+                    with open("data/data.txt", "r", encoding='UTF-8') as file:
+                        file_content = file.read()
+
+                    os.chdir(file_content)
+                    command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +hostname {rcname}"
+                    if str(gametype) == '休闲':
+                        command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                    elif str(gametype) == '竞技':
+                        command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                    elif str(gametype) == '死斗':
+                        command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '回防':
+                        command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                    elif str(gametype) == '搭档':
+                        command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '军备':
+                        command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                    os.system(command)
+                    os.chdir(RunLocal)
+                else:
+                    with open("data/data.txt", "r", encoding='UTF-8') as file:
+                        file_content = file.read()
+
+                    os.chdir(file_content)
+                    command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +hostname {rcname}"
+                    if str(gametype) == '休闲':
+                        command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                    elif str(gametype) == '竞技':
+                        command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                    elif str(gametype) == '死斗':
+                        command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '回防':
+                        command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                    elif str(gametype) == '搭档':
+                        command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                    elif str(gametype) == '军备':
+                        command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                    os.system(command)
+                    os.chdir(RunLocal)
+        else:
+            Kresult = win32api.MessageBox(0, "CS2正在运行", "提示", win32con.MB_YESNO)
+            if Kresult == win32con.IDYES:
+                for proc in psutil.process_iter(['name']):
+                    if proc.info['name'] == target_process:
+                        proc.kill()
+                        if wksp == "True":
+                            if vac == "True":
+                                with open("data/data.txt", "r", encoding='UTF-8') as file:
+                                    file_content = file.read()
+
+                                os.chdir(file_content)
+                                command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map de_mirage -high -port {port} -ip {ip} -console +host_workshop_map {map} +hostname {rcname}"
+                                if str(gametype) == '休闲':
+                                    command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                                elif str(gametype) == '竞技':
+                                    command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                                elif str(gametype) == '死斗':
+                                    command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '回防':
+                                    command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                                elif str(gametype) == '搭档':
+                                    command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '军备':
+                                    command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                                os.system(command)
+                                os.chdir(RunLocal)
+                            else:
+                                with open("data/data.txt", "r", encoding='UTF-8') as file:
+                                    file_content = file.read()
+
+                                os.chdir(file_content)
+                                command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map de_mirage -high -port {port} -ip {ip} -console +host_workshop_map {map} -insecure +hostname {rcname}"
+                                if str(gametype) == '休闲':
+                                    command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                                elif str(gametype) == '竞技':
+                                    command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                                elif str(gametype) == '死斗':
+                                    command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '回防':
+                                    command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                                elif str(gametype) == '搭档':
+                                    command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '军备':
+                                    command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                                os.system(command)
+                                os.chdir(RunLocal)
+                        else:
+                            if vac == "True":
+                                with open("data/data.txt", "r", encoding='UTF-8') as file:
+                                    file_content = file.read()
+
+                                os.chdir(file_content)
+                                command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +hostname {rcname}"
+                                if str(gametype) == '休闲':
+                                    command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                                elif str(gametype) == '竞技':
+                                    command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                                elif str(gametype) == '死斗':
+                                    command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '回防':
+                                    command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                                elif str(gametype) == '搭档':
+                                    command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '军备':
+                                    command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                                os.system(command)
+                                os.chdir(RunLocal)
+                            else:
+                                with open("data/data.txt", "r", encoding='UTF-8') as file:
+                                    file_content = file.read()
+
+                                os.chdir(file_content)
+                                command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console +hostname {rcname}"
+                                if str(gametype) == '休闲':
+                                    command += " +game_type 0 +game_mode 0 +exec server.cfg"
+                                elif str(gametype) == '竞技':
+                                    command += " +game_type 0 +game_mode 1 +exec server.cfg"
+                                elif str(gametype) == '死斗':
+                                    command += " +game_type 1 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '回防':
+                                    command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
+                                elif str(gametype) == '搭档':
+                                    command += " +game_type 0 +game_mode 2 +exec server.cfg"
+                                elif str(gametype) == '军备':
+                                    command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
+
+                                os.system(command)
+                                os.chdir(RunLocal)
+
     def update(self):
-        version="V1.15"
-        content = requests.get("")
-        content=content.text
-        if version==content:
+        version = "V1.17"
+        content = requests.get("xg.frp.one:43810")
+        content = content.text
+        if version == content:
             win32api.MessageBox(0, "已是最新", "检查更新", win32con.MB_OK)
-        elif content!=version:
-            r= win32api.MessageBox(0, "检查到最新版本", "检查更新", win32con.MB_YESNO)
+        elif content != version:
+            r = win32api.MessageBox(0, "检查到最新版本", "检查更新", win32con.MB_YESNO)
             if r == win32con.IDYES:
-                resp=requests.get(""+content)
-                save='./'+'update'+'.zip'
+                resp = requests.get("" + content)
+                save = './' + 'update' + '.zip'
                 with open(save, 'wb') as file:
                     file.write(resp.content)
                 re = win32api.MessageBox(0, "现在更新?", " ", win32con.MB_YESNO)
-                if re==win32con.IDYES:
+                if re == win32con.IDYES:
                     os.system("1.bat")
 
                 else:
@@ -222,119 +415,65 @@ class Api:
         os.system('taskkill /f /im %s' % 'steam.exe')
         os.system("start" + str(steam_root_directory))
 
-    def startpy(self, ip, port, maxplayers):
+    def install_plugins(self):
+        os.chdir(local)
+        zipF = win32ui.CreateFileDialog(1)
+        zipF.SetOFNInitialDir('xxxxxxxxx')
+        zipF.DoModal()
+        fileName = zipF.GetPathName()
+        with open("data/data.txt", "r", encoding='UTF-8') as file:
+            file_content = file.read()
+        os.chdir(file_content)
+        os.chdir("../../")
+        os.chdir("./csgo")
+        extract =os.getcwd()
 
-        target_process = 'cs2.exe'
-        vac = str(self.vac)
-        map = self.map
-        gametype = self.gametype
+        with zipfile.ZipFile(fileName, 'r') as zip_ref:
+            zip_ref.extractall(extract)
+            os.chdir(local)
 
-        with open('data/type.txt', 'w', encoding='UTF-8') as file:
-            file.write(str(port) + "|" + str(ip) + "|" + str(maxplayers) + "|" + map + "|" + vac + "|" + gametype)
+        os.chdir(local)
+        Nname = "gameinfo.gi"
+        ONa="gameinfo1.gi"
+        os.remove(extract+"/gameinfo.gi")
+        shutil.copy("./data/gameinfo1.gi",extract)
+        os.rename(os.path.join(extract, ONa), os.path.join(extract, Nname))
+        win32api.MessageBox(0, "安装成功", "提示", win32con.MB_YESNO)
 
-        RunLocal = os.getcwd()
+    def uninstall_plugins_gi(self):
+        os.chdir(local)
+        with open("data/data.txt", "r", encoding='UTF-8') as file:
+            file_content = file.read()
+        os.chdir(file_content)
+        os.chdir("../../")
+        os.chdir("./csgo")
+        extract =os.getcwd()
+        os.remove(extract+"/gameinfo.gi")
+        os.chdir(local)
+        shutil.copy("./data/gameinfo.gi", extract)
+        win32api.MessageBox(0, "卸载插件引导成功", "提示", win32con.MB_YESNO)
 
-        if not Api.is_process_running(target_process):
-            if vac == "True":
-                with open("data/data.txt", "r", encoding='UTF-8') as file:
-                    file_content = file.read()
+    def uninstall_plugins(self):
+        os.chdir(local)
+        with open("data/data.txt", "r", encoding='UTF-8') as file:
+            file_content = file.read()
+        os.chdir(file_content)
+        os.chdir("../../")
+        os.chdir("./csgo")
+        extract =os.getcwd()
+        shutil.rmtree(extract+"/addons")
+        win32api.MessageBox(0, "卸载插件文件成功", "提示", win32con.MB_YESNO)
+# def steamcmd(self):
+#     # 构建SteamCMD命令
+#     command = subprocess.Popen(['./steamcmd.exe'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True)
+#
+#     # 执行SteamCMD命令
+#     subprocess.run(command, capture_output=True, text=True,encoding="UTF-8")
+#     command.stdin.write('login anonymous\n')
+#     command.stdin.flush()
+#     output = command.stdout.readline()
+#     # print(output.strip())  # 输出控制台输出
 
-                os.chdir(file_content)
-                command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console"
-                if str(gametype) == '休闲':
-                    command += " +game_type 0 +game_mode 0 +exec server.cfg"
-                elif str(gametype) == '竞技':
-                    command += " +game_type 0 +game_mode 1 +exec server.cfg"
-                elif str(gametype) == '死斗':
-                    command += " +game_type 1 +game_mode 2 +exec server.cfg"
-                elif str(gametype) == '回防':
-                    command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
-                elif str(gametype) == '搭档':
-                    command += " +game_type 0 +game_mode 2 +exec server.cfg"
-                elif str(gametype) == '军备':
-                    command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
-                
-                os.system(command)
-                os.chdir(RunLocal)
-            else:
-                with open("data/data.txt", "r", encoding='UTF-8') as file:
-                    file_content = file.read()
-
-                os.chdir(file_content)
-                command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console"
-                if str(gametype) == '休闲':
-                    command += " +game_type 0 +game_mode 0 +exec server.cfg"
-                elif str(gametype) == '竞技':
-                    command += " +game_type 0 +game_mode 1 +exec server.cfg"
-                elif str(gametype) == '死斗':
-                    command += " +game_type 1 +game_mode 2 +exec server.cfg"
-                elif str(gametype) == '回防':
-                    command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
-                elif str(gametype) == '搭档':
-                    command += " +game_type 0 +game_mode 2 +exec server.cfg"
-                elif str(gametype) == '军备':
-                    command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
-
-                os.system(command)
-                os.chdir(RunLocal)
-        else:
-            Kresult = win32api.MessageBox(0, "CS2正在运行", "提示", win32con.MB_YESNO)
-            if Kresult == win32con.IDYES:
-                for proc in psutil.process_iter(['name']):
-                    if proc.info['name'] == target_process:
-                        proc.kill()
-                        if vac == "True":
-                            with open("data/data.txt", "r", encoding='UTF-8') as file:
-                                file_content = file.read()
-
-                            os.chdir(file_content)
-                            command = f"start cs2.exe -dedicated -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console"
-                            if str(gametype) == '休闲':
-                                command += " +game_type 0 +game_mode 0 +exec server.cfg"
-                            elif str(gametype) == '竞技':
-                                command += " +game_type 0 +game_mode 1 +exec server.cfg"
-                            elif str(gametype) == '死斗':
-                                command += " +game_type 1 +game_mode 2 +exec server.cfg"
-                            elif str(gametype) == '回防':
-                                command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
-                            elif str(gametype) == '搭档':
-                                command += " +game_type 0 +game_mode 2 +exec server.cfg"
-                            elif str(gametype) == '军备':
-                                command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
-                            os.system(command)
-                            os.chdir(RunLocal)
-                        else:
-                            os.getcwd()
-                            with open("data/data.txt", "r", encoding='UTF-8') as file:
-                                file_content = file.read()
-                            os.chdir(file_content)
-                            command = f"start cs2.exe -dedicated -insecure -maxplayers {maxplayers} -console +map {map} -high -port {port} -ip {ip} -console"
-                            if str(gametype) == '休闲':
-                                command += " +game_type 0 +game_mode 0 +exec server.cfg"
-                            elif str(gametype) == '竞技':
-                                command += " +game_type 0 +game_mode 1 +exec server.cfg"
-                            elif str(gametype) == '死斗':
-                                command += " +game_type 1 +game_mode 2 +exec server.cfg"
-                            elif str(gametype) == '回防':
-                                command += " +sv_skirmish_id 12 +game_type 0 +game_mode 0 +exec gamemode_retakecasual.cfg +exec server.cfg"
-                            elif str(gametype) == '搭档':
-                                command += " +game_type 0 +game_mode 2 +exec server.cfg"
-                            elif str(gametype) == '军备':
-                                command += " +game_type 1 +game_mode 0 +exec server.cfg +sv_skirmish_id 10"
-                            os.system(command)
-                            os.getcwd()
-                            os.chdir(RunLocal)
-
-    # def steamcmd(self):
-    #     # 构建SteamCMD命令
-    #     command = subprocess.Popen(['./steamcmd.exe'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True)
-    #
-    #     # 执行SteamCMD命令
-    #     subprocess.run(command, capture_output=True, text=True,encoding="UTF-8")
-    #     command.stdin.write('login anonymous\n')
-    #     command.stdin.flush()
-    #     output = command.stdout.readline()
-    #     # print(output.strip())  # 输出控制台输出
 
 
 if __name__ == '__main__':

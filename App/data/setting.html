@@ -11,6 +11,9 @@
 <button id="check" onclick="window.pywebview.api.check_file()">环境检测</button>
 <button id="vac_fix" onclick="window.pywebview.api.vac_fix()">VAC修复</button>
 <button id="update" onclick="window.pywebview.api.update()">检查更新</button>
+<button id="install_plugins" onclick="window.pywebview.api.install_plugins()">安装插件</button>
+<button id="uninstall_plugins_gi" onclick="window.pywebview.api.uninstall_plugins_gi()">卸插件引导</button>
+<button id="uninstall_plugins" onclick="window.pywebview.api.uninstall_plugins()">卸插件文件</button>
 </body>
 <div class="menu">
     <a href="index.html" style="color: inherit">
@@ -39,6 +42,7 @@
     </svg>
 </div>
 <style>
+    
     .background_dark {
         background-color: rgb(43, 43, 43);
     }
@@ -89,7 +93,7 @@
     }
     #check{
         position: fixed;
-        top: 55px;
+        top: 49px;
         left: 70px;
 
         width: 80px;
@@ -103,7 +107,7 @@
     }
     #vac_fix{
         position: fixed;
-        top: 95px;
+        top: 83px;
         left: 70px;
 
         width: 80px;
@@ -117,7 +121,7 @@
     }
     #update{
         position: fixed;
-        top: 135px;
+        top: 117px;
         left: 70px;
 
         width: 80px;
@@ -131,10 +135,52 @@
     }
 
 
+
+    #install_plugins{
+        position: fixed;
+        top: 151px;
+        left: 70px;
+        width: 80px;
+        height: 30px;
+        border-width: 0px;
+        border-radius: 3px;
+        background: #c7112f;
+        cursor: pointer;
+        outline: none;
+        color: white;
+    }
+    #uninstall_plugins_gi{
+        position: fixed;
+        top: 184px;
+        left: 70px;
+        width: 80px;
+        height: 30px;
+        border-width: 0px;
+        border-radius: 3px;
+        background: #0fae3e;
+        cursor: pointer;
+        outline: none;
+        color: white;
+    }
+    #uninstall_plugins{
+        position: fixed;
+        top: 217px;
+        left: 70px;
+        width: 80px;
+        height: 30px;
+        border-width: 0px;
+        border-radius: 3px;
+        background: #0fae3e;
+        cursor: pointer;
+        outline: none;
+        color: white;
+    }
+
+
 </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
 <script>
 
 
